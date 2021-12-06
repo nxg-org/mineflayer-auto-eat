@@ -42,14 +42,6 @@ export class AutoEat {
         });
     }
 
-    timeoutAfter(time: number, message: string) {
-        return new Promise((_, reject) => {
-            setTimeout(() => {
-                reject(new Error(message));
-            }, time);
-        });
-    }
-
     async cancelEat() {
         this.isEating = false;
         this.canceled = true;
