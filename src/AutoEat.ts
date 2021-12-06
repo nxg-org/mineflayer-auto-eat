@@ -154,7 +154,6 @@ export class AutoEat {
             if (pickedUpFood) {
                 //Wait for item to be registered into inventory.
                 await this.bot.waitForTicks(1);
-                console.log("test");
                 await this.eat(this.useOffHand, pickedUpFood, true);
             }
         } catch (e) {}
