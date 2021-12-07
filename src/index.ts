@@ -1,6 +1,7 @@
 import { Bot, BotEvents } from "mineflayer";
 import { Item } from "prismarine-item";
 import { AutoEat } from "./AutoEat";
+import utilPlugin from "@nxg-org/mineflayer-util-plugin";
 
 declare module "mineflayer" {
     interface Bot {
@@ -13,5 +14,6 @@ declare module "mineflayer" {
 }
 
 export default function plugin(bot: Bot) {
+    if (!bot.hasPlugin(utilPlugin)) bot.loadPlugin(utilPlugin)
     bot.autoEat = new AutoEat(bot);
 }
