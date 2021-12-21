@@ -12,9 +12,6 @@ const bot = createBot({
     password: process.argv[5] ?? undefined,
 });
 
-// Load dependency
-bot.loadPlugin(utilPlugin);
-
 // Load the plugin
 bot.loadPlugin(AutoEat);
 

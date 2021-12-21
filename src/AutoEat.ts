@@ -56,16 +56,11 @@ export class AutoEat {
 
     async waitForEating(bestFood: Item, offhand?: boolean): Promise<boolean> {
         const time = performance.now();
-        // let debug = 0;
         while (
             this.isEating &&
             performance.now() - time < this.eatingTimeout &&
             this.bot.util.inv.getHandWithItem(offhand)?.name === bestFood.name
         ) {
-            // debug++
-            // if (!(debug % 50)) {
-            //     console.log(this.isEating, performance.now() - time, this.getHandWithItem(hand)?.name, bestFood.name)
-            // }
             await sleep(0);
         }
 
@@ -92,10 +87,6 @@ export class AutoEat {
             .sort((a, b) => this.foodsByName[b.name][this.priority] - this.foodsByName[a.name][this.priority]);
     }
 
-    // findFoodFromGround(orgEntity: Entity): Item {
-
-    // }
-
     async equipCheck(item: Item, destination: EquipmentDestination) {
         const requiresConfirmation = this.bot.inventory.requiresConfirmation;
         if (this.ignoreInventoryCheck) this.bot.inventory.requiresConfirmation = false;
@@ -112,7 +103,7 @@ export class AutoEat {
 
         foodToEat = (foodToEat as any)?.slot
             ? (foodToEat as Item)
-            : this.bot.util.inv.getAllItems().find((i) => i?.name === foodToEat?.name);
+            : this.bot.util.inv.getAllItems().find((i) => i.name === foodToEat?.name);
         const orgItem = this.bot.util.inv.getHandWithItem(useOffHand)!;
         const bestChoices = !!foodToEat ? [foodToEat] : this.findBestChoices();
         const bestFood = bestChoices[0];
