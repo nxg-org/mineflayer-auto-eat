@@ -27,7 +27,7 @@ export class AutoEat {
     constructor(private bot: Bot) {
         this.foodsByName = md(this.bot.version).foodsByName;
         this.foods = md(this.bot.version).foods;
-        this.bot.on("physicsTick", this.healthCheck.bind(this));
+        this.bot.on("health", this.healthCheck.bind(this));
         this.bot.on("spawn", () => {
             this.isEating = false;
         });
