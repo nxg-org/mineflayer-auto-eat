@@ -1,6 +1,6 @@
 {
     "name": "@nxg-org/mineflayer-auto-eat",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "description": "An auto-eat plugin for mineflayer bots.",
     "keywords": [
         "mineflayer",
@@ -29,7 +29,7 @@
         "vec3": "^0.1.7"
     },
     "devDependencies": {
-        "@types/node": "^16.11.11",
+        "@types/node": "^17.0.23",
         "typescript": "^4.5.2"
     }
 }
