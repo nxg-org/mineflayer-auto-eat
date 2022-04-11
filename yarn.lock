@@ -234,15 +234,10 @@ macaddress@^0.5.1:
   resolved "https://registry.npmjs.org/macaddress/-/macaddress-0.5.2.tgz"
   integrity sha512-cYYBbT3b84hTEHssWE6OmsuqF/NiLXE2RGK9Sc9SwwE9kMoKrbaUAJtKs6ucd0FFgZjXE1Wm3hoGEEYas0N6EA==
 
-minecraft-data@^2.100.1, minecraft-data@^2.106.0, minecraft-data@^2.109.0, minecraft-data@^2.113.0, minecraft-data@^2.113.1, minecraft-data@^2.114.1, minecraft-data@^2.115.1, minecraft-data@^2.118.0:
+minecraft-data@^2.100.1, minecraft-data@^2.106.0, minecraft-data@^2.109.0, minecraft-data@^2.113.0, minecraft-data@^2.113.1, minecraft-data@^2.114.1, minecraft-data@^2.115.1, minecraft-data@^2.118.0, minecraft-data@^2.62.1, minecraft-data@^2.73.1, minecraft-data@^2.74.0, minecraft-data@^2.75.0:
   version "2.220.0"
   resolved "https://registry.yarnpkg.com/minecraft-data/-/minecraft-data-2.220.0.tgz#23639d8106e30d0f5b214533ffc7a8e28920cacb"
   integrity sha512-6/1TxrX9jf8z8aRxWtB9IiDy6O3t6Yor/qGxCDB8ibahf/Ss5HNaPjjjjATLrdT2KrIWywv5oc4eSZ2bfXlDmQ==
-
-minecraft-data@^2.62.1, minecraft-data@^2.73.1, minecraft-data@^2.74.0, minecraft-data@^2.75.0:
-  version "2.97.0"
-  resolved "https://registry.npmjs.org/minecraft-data/-/minecraft-data-2.97.0.tgz"
-  integrity sha512-hs///noGkmR6PBzA1VT+8oP3V/VR2JFno2Jw2M3RFLmuQtMqBSQBrpWqBa8ycx9eEA0bccasftEimv5OSpIwxQ==
 
 minecraft-folder-path@^1.2.0:
   version "1.2.0"
@@ -429,17 +424,10 @@ prismarine-entity@^2.0.0:
     prismarine-item "^1.11.2"
     vec3 "^0.1.4"
 
-prismarine-item@^1.10.0, prismarine-item@^1.10.1, prismarine-item@^1.11.1, prismarine-item@^1.5.0:
-  version "1.11.1"
-  resolved "https://registry.npmjs.org/prismarine-item/-/prismarine-item-1.11.1.tgz"
-  integrity sha512-XSH17qurwgY0+Oez4k1FQAWjLrA0kLwssv1eQl93ghigVY7jOz+Z1IbeJOBw95SZZoQQooJXlftgwNjpvOX8aw==
-  dependencies:
-    prismarine-nbt "^1.4.0"
-
-prismarine-item@^1.11.0, prismarine-item@^1.11.2:
-  version "1.11.3"
-  resolved "https://registry.yarnpkg.com/prismarine-item/-/prismarine-item-1.11.3.tgz#8f0bec484895cad33d36381289e1a16f5b57db2e"
-  integrity sha512-3zgExGF6hektrRlvarkh+il2wp4EyPzi7oJiOxabeaqSfc17taBbJubPJeEZHdi7sy4sB0diF10PgrESD8mc3Q==
+prismarine-item@^1.10.0, prismarine-item@^1.10.1, prismarine-item@^1.11.0, prismarine-item@^1.11.1, prismarine-item@^1.11.2, prismarine-item@^1.5.0:
+  version "1.11.4"
+  resolved "https://registry.yarnpkg.com/prismarine-item/-/prismarine-item-1.11.4.tgz#30487752da0209d252440ef35ffaf3827c6bc291"
+  integrity sha512-hWzSm0cXLvgLvoTM28lX1ody4q8hRMgZH3GngGczb9Ipc/qEf3/+zBX6LA4giBeK4MHFVYbwTCVkp/F8GscgQg==
   dependencies:
     minecraft-data "^2.118.0"
     prismarine-nbt "^2.0.0"
