@@ -32,10 +32,10 @@
     prismarine-item "^1.11.2"
     vec3 "^0.1.7"
 
-"@types/node@^16.11.11":
-  version "16.11.11"
-  resolved "https://registry.npmjs.org/@types/node/-/node-16.11.11.tgz"
-  integrity sha512-KB0sixD67CeecHC33MYn+eYARkqTheIRNuu97y2XMjR7Wu3XibO1vaY6VBV6O/a89SPI81cEUIYT87UqUWlZNw==
+"@types/node@^18.7.15":
+  version "18.7.15"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.15.tgz#20ae1ec80c57ee844b469f968a1cd511d4088b29"
+  integrity sha512-XnjpaI8Bgc3eBag2Aw4t2Uj/49lLBSStHWfqKvIuXD7FIrZyMLWp8KuAFHAqxMZYTF9l08N1ctUn9YNybZJVmQ==
 
 "@xboxreplay/errors@^0.1.0":
   version "0.1.0"
