@@ -22,7 +22,7 @@
         "test": "node --trace-warnings lib/example.js"
     },
     "dependencies": {
-        "@nxg-org/mineflayer-util-plugin": "^1.5.0"
+        "@nxg-org/mineflayer-util-plugin": "^1.5.2"
     },
     "devDependencies": {
         "@types/node": "^16.11.11",
