@@ -1,7 +1,6 @@
 import { createBot } from "mineflayer";
 import { promisify } from "util";
-import utilPlugin from "@nxg-org/mineflayer-util-plugin";
-import AutoEat from "./index";
+import autoEat from "./index";
 
 const sleep = promisify(setTimeout);
 
@@ -12,8 +11,6 @@ const bot = createBot({
     password: process.argv[5] ?? undefined,
 });
 
-// Load the plugin
-bot.loadPlugin(AutoEat);
 
 async function beginMonitor() {
     while (true) {
@@ -30,6 +27,11 @@ async function flipHands() {
 }
 
 bot.once("spawn", async () => {
+
+    // Load the plugin
+    bot.loadPlugin(autoEat);
+
+
     bot.autoEat.enable();
 
     bot.autoEat.setOptions({
