@@ -25,16 +25,19 @@ async function beginMonitor() {
 async function flipHands() {
     while (true) {
         await sleep(10000);
-        bot.autoEat.useOffHand = !bot.autoEat.useOffHand;
+        bot.autoEat.options.useOffHand = !bot.autoEat.options.useOffHand;
     }
 }
 
 bot.once("spawn", async () => {
-    bot.autoEat.enabled = true;
-    bot.autoEat.useOffHand = false;
-    bot.autoEat.priority = "foodPoints";
-    bot.autoEat.bannedFood = [];
-    bot.autoEat.eatingTimeout = 3000;
+    bot.autoEat.enable();
+
+    bot.autoEat.setOptions({
+        useOffHand: false,
+        priority: "foodPoints",
+        bannedFood: [],
+        eatingTimeout: 3000
+    })
 
     await bot.waitForTicks(20);
 
@@ -54,6 +57,6 @@ bot.on("autoEatStarted", (item, offhand) => {
     console.log(`Auto Eat started! Eating ${item.displayName}. Using ${offhand ? "off-hand" : "hand"}`);
 });
 
-bot.on("autoEatStopped", (item, offhand) => {
-    console.log(`Auto Eat stopped! Finished eating ${item?.displayName}. Used ${offhand ? "off-hand" : "hand"}`);
+bot.on("autoEatFinished", (item, offhand) => {
+    console.log(`Auto Eat finished! Finished eating ${item?.displayName}. Used ${offhand ? "off-hand" : "hand"}`);
 });
