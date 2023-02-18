@@ -111,8 +111,8 @@ export class AutoEat {
         ) {
             
             const copyItem = this.bot.util.inv.getAllItems().find((item) => 
-                item.name === this.lastItem?.item.name 
-                && item.nbt === this.lastItem?.item.nbt
+                item.name === this.lastItem?.item?.name 
+                && item.nbt === this.lastItem?.item?.nbt
             );
 
             if (copyItem) {
@@ -136,7 +136,7 @@ export class AutoEat {
         this.bot.inventory.requiresConfirmation = requiresConfirmation;
     }
 
-    public async eat(useOffHand: boolean = false, foodToEat?: Item | md.Food, equipOldItem: boolean = true): Promise<Error | boolean> {
+    public async eat( foodToEat?: Item | md.Food, useOffHand: boolean = false, equipOldItem: boolean = true): Promise<Error | boolean> {
         const hand = useOffHand ? "off-hand" : "hand";
 
         if (this.canceled) {
