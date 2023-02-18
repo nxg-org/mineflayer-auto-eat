@@ -30,7 +30,7 @@ export class AutoEat {
     private lastItem?: { item: Item; dest: "hand" | "off-hand" };
     private canceled: boolean = false;
 
-    constructor(private bot: Bot, options?: Partial<IAutoEatOptions>) {
+    constructor(private bot: Bot, options: Partial<IAutoEatOptions> = {}) {
         this.foodsByName = bot.registry.foodsByName;
         this.foods = bot.registry.foods;
 
@@ -136,8 +136,9 @@ export class AutoEat {
         this.bot.inventory.requiresConfirmation = requiresConfirmation;
     }
 
-    public async eat( foodToEat?: Item | md.Food, useOffHand: boolean = false, equipOldItem: boolean = true): Promise<Error | boolean> {
-        const hand = useOffHand ? "off-hand" : "hand";
+    public async eat( options: {food?: Item | md.Food, offhand?: boolean, equipOldItem?: boolean}): Promise<Error | boolean> {
+        const offhand = options.offhand || false;
+        const hand = options.offhand ? "off-hand" : "hand";
 
         if (this.canceled) {
             return Error("Canceled.");
@@ -149,11 +150,11 @@ export class AutoEat {
 
         this.isEating = true;
 
-        foodToEat = (foodToEat as any)?.slot
-            ? (foodToEat as Item)
+        let foodToEat: Item | undefined = (options.food as any)?.slot
+            ? (options.food as Item)
             : this.bot.util.inv.getAllItems().find((i) => i.name === foodToEat?.name);
 
-        const orgItem = this.bot.util.inv.getHandWithItem(useOffHand)!;
+        const orgItem = this.bot.util.inv.getHandWithItem(options.offhand)!;
         const bestChoices = !!foodToEat ? [foodToEat] : this.findBestChoices();
         const bestFood = bestChoices[0];
 
@@ -168,19 +169,19 @@ export class AutoEat {
                 await this.equipCheck(bestFood, hand);
             }
 
-            this.bot.emit("autoEatStarted", bestFood, useOffHand);
+            this.bot.emit("autoEatStarted", bestFood, offhand);
             this.bot.deactivateItem();
             this.bot.activateItem(this.options.useOffHand);
 
-            result = await this.waitForEating(bestFood, useOffHand);
+            result = await this.waitForEating(bestFood, offhand);
 
-            if (equipOldItem || this.options.returnToLastItem) {
+            if (options.equipOldItem || this.options.returnToLastItem) {
                 await this.reEquipOldItem(bestFood);
             }
         } else {
             result = Error("No found food.");
         }
-        this.bot.emit("autoEatFinished", bestFood ?? null, useOffHand);
+        this.bot.emit("autoEatFinished", bestFood ?? null, offhand);
         this.isEating = false;
         return result;
     }
@@ -189,7 +190,7 @@ export class AutoEat {
         if (!this.enabled || this.isEating || (this.bot.food >= this.options.minHunger && this.bot.health > this.options.minHealth)) return;
         // if (this.bot.pathfinder && (this.bot.pathfinder.isMining() || this.bot.pathfinder.isBuilding())) return; //lol they know
         try {
-            await this.eat(this.options.useOffHand);
+            await this.eat({offhand: this.options.useOffHand});
         } catch (e) { }
     }
 
@@ -205,7 +206,7 @@ export class AutoEat {
             if (pickedUpFood) {
                 //Wait for item to be registered into inventory.
                 await this.bot.waitForTicks(1);
-                await this.eat(this.options.useOffHand, pickedUpFood, true);
+                await this.eat({food: pickedUpFood, offhand: this.options.useOffHand, equipOldItem: true});
             }
         } catch (e) { }
     }
