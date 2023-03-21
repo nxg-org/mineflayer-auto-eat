@@ -217,7 +217,7 @@ export class AutoEat {
     if (who.username !== this.bot.username || !this.options.checkOnItemPickup) return;
     if (this.isEating) return;
 
-    const itemId = (food.metadata.find((meta) => typeof meta === "object") as any).itemId;
+    const itemId = (food.metadata.find((meta) => typeof meta === "object") as any)?.itemId;
     if (!itemId) return;
     const pickedUpFood = this.foods[itemId];
     if (pickedUpFood) {
