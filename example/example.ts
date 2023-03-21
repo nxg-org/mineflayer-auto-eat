@@ -1,14 +1,14 @@
 import { createBot } from "mineflayer";
 import { promisify } from "util";
-import autoEat from "./index";
+import autoEat from "../src/index";
 
 const sleep = promisify(setTimeout);
 
 const bot = createBot({
     host: process.argv[2] ?? "localhost",
     port: Number(process.argv[3]) ?? 25565,
-    username: process.argv[4] ?? "auto_eat_testing",
-    password: process.argv[5] ?? undefined,
+    version: process.argv[4],
+    username: "auto_eat_testing"
 });
 
 
@@ -22,6 +22,7 @@ async function beginMonitor() {
 async function flipHands() {
     while (true) {
         await sleep(10000);
+     
         bot.autoEat.options.useOffHand = !bot.autoEat.options.useOffHand;
     }
 }
@@ -31,8 +32,6 @@ bot.once("spawn", async () => {
     // Load the plugin
     bot.loadPlugin(autoEat);
 
-
-    bot.autoEat.enable();
 
     bot.autoEat.setOptions({
         useOffHand: false,
@@ -49,8 +48,9 @@ bot.once("spawn", async () => {
     if (Number(bot.version.split(".")[1]) >= 13) bot.chat(`/effect give ${bot.username} minecraft:hunger 100000 100`);
     else bot.chat(`/effect ${bot.username} minecraft:hunger 100000 100`);
 
+    bot.autoEat.enableAuto();
     beginMonitor();
-    flipHands();
+    flipHands();   
 });
 
 // The bot eats food automatically and emits these events when it starts eating and stops eating.
