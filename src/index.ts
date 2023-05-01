@@ -3,11 +3,12 @@ import { Item } from "prismarine-item";
 import { AutoEat } from "./autoEat";
 import utilPlugin from "@nxg-org/mineflayer-util-plugin";
 import md from "minecraft-data";
+import { EatUtil } from "./new";
 
 declare module "mineflayer" {
     interface Bot {
-        autoEat: AutoEat;
-        registry: md.IndexedData;
+        autoEat: EatUtil;
+        // registry: md.IndexedData;
     }
     interface BotEvents {
         autoEatStarted: (eatenItem: Item, usedHand: boolean) => void;
@@ -15,7 +16,7 @@ declare module "mineflayer" {
     }
 }
 
-export default function plugin(bot: Bot) {
+export function loader(bot: Bot) {
     if (!bot.hasPlugin(utilPlugin)) bot.loadPlugin(utilPlugin)
-    bot.autoEat = new AutoEat(bot);
+    bot.autoEat = new EatUtil(bot);
 }

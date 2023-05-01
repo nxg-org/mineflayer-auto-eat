@@ -1,6 +1,6 @@
-import { createBot } from "mineflayer";
-import { promisify } from "util";
-import {loader as autoEat} from "../src/index";
+const { createBot } =require( "mineflayer");
+const { promisify } = require( "util");
+const  {loader: autoEat} = require("../lib");
 
 const sleep = promisify(setTimeout);
 
@@ -29,6 +29,7 @@ async function flipHands() {
 
 bot.once("spawn", async () => {
 
+    console.log(autoEat)
     // Load the plugin
     bot.loadPlugin(autoEat);
 

@@ -6,7 +6,6 @@ import { promisify } from "util";
 import md from "minecraft-data";
 const sleep = promisify(setTimeout);
 
-
 export interface IAutoEatOptions {
   priority: "foodPoints" | "saturation";
   minHunger: number;
@@ -63,6 +62,9 @@ export class AutoEat {
         this.isEating = false;
       }
     });
+
+    this.bot.on("physicsTick", this.healthCheck);
+    this.bot.on("playerCollect", this.playerCollectCheck);
   }
 
   public setOptions(options: Partial<IAutoEatOptions>) {
@@ -72,15 +74,11 @@ export class AutoEat {
   public enableAuto() {
     this.options.checkOnHealth = true;
     this.options.checkOnItemPickup = true;
-    this.bot.on("physicsTick", this.healthCheck);
-    this.bot.on("playerCollect", this.playerCollectCheck);
   }
 
   public disableAuto() {
     this.options.checkOnHealth = false;
     this.options.checkOnItemPickup = false;
-    this.bot.off("physicsTick", this.healthCheck);
-    this.bot.off("playerCollect", this.playerCollectCheck);
   }
 
   public cancelEat() {
