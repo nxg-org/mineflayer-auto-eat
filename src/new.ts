@@ -64,6 +64,10 @@ export class EatUtil extends EventEmitter {
     this.opts = Object.assign({}, DefaultOpts, opts) as IEatUtilOpts;
   }
 
+  public setOpts(opts: Partial<IEatUtilOpts>) {
+    Object.assign(this.opts, opts)
+  }
+
 
   /**
    * Given a list of items, determine which food is optimal.
