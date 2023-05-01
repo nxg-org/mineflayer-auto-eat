@@ -249,17 +249,24 @@ export class EatUtil extends (EventEmitter as {new(): StrictEventEmitter<EventEm
    * Utility function to to eat whenever under health or hunger.
    */
   private statusCheck = async () => {
-    if (this.bot.food < this.opts.minHunger || this.bot.health < this.opts.minHealth)
-      try { await this.eat(); } catch {}
+    if (this.bot.food < this.opts.minHunger || this.bot.health < this.opts.minHealth) {
+      if (this._eating) return;
+      try { await this.eat(); } catch (e) { console.error(e) }
+    }
+
   };
 
 
+  /**
+   * Using timer to desync from physicsTick (attempt to work with mcproxy)
+   * 
+   * Note: did not change anything.
+   */
   enableAuto() {
-    this.eatTimer = setInterval(this.statusCheck, 50);
+    this.bot.on('physicsTick', this.statusCheck);
   }
 
   disableAuto() {
-    if (this.eatTimer) clearInterval(this.eatTimer)
-    delete this.eatTimer
+    this.bot.off('physicsTick', this.statusCheck);
   }
 }
