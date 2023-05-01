@@ -51,8 +51,6 @@ export class AutoEat {
       options
     );
 
-    this.bot.on("physicsTick", this.healthCheck);
-    this.bot.on("playerCollect", this.playerCollectCheck);
     this.bot.on("spawn", () => {
       this.isEating = false;
     });
@@ -74,11 +72,15 @@ export class AutoEat {
   public enableAuto() {
     this.options.checkOnHealth = true;
     this.options.checkOnItemPickup = true;
+    this.bot.on("physicsTick", this.healthCheck);
+    this.bot.on("playerCollect", this.playerCollectCheck);
   }
 
   public disableAuto() {
     this.options.checkOnHealth = false;
     this.options.checkOnItemPickup = false;
+    this.bot.off("physicsTick", this.healthCheck);
+    this.bot.off("playerCollect", this.playerCollectCheck);
   }
 
   public cancelEat() {
