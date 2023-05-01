@@ -47,6 +47,7 @@ export class EatUtil extends EventEmitter {
   opts: IEatUtilOpts;
   private _eating = false;
   private _rejectionBinding?: (error: Error) => void;
+  private eatTimer?: NodeJS.Timer;
 
   public get foods() {
     return this.bot.registry.foods;
@@ -215,9 +216,6 @@ export class EatUtil extends EventEmitter {
     // trigger use state based on hand
     this.bot.activateItem(opts.offhand)
 
-    console.log(`Eating with ${opts.food.name} with ${wantedHand}`)
-    console.log(opts)
-
     this.emit('autoEatStart', opts);
 
     // Wait for eating to finish, handle errors gracefully if there are, and perform cleanup.
@@ -249,10 +247,12 @@ export class EatUtil extends EventEmitter {
 
 
   enableAuto() {
+    this.eatTimer = setInterval(this.statusCheck, 50);
     this.bot.on('physicsTick', this.statusCheck);
   }
 
   disableAuto() {
-    this.bot.off('physicsTick', this.statusCheck);
+    if (this.eatTimer) clearInterval(this.eatTimer)
+    delete this.eatTimer
   }
 }
