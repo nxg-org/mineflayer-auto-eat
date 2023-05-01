@@ -12,7 +12,6 @@ export interface IEatUtilOpts {
   minHealth: number;
   bannedFood: string[];
   returnToLastItem: boolean;
-  eatUntilFull: boolean;
   offhand: boolean;
   eatingTimeout: number;
   strictErrors: boolean;
@@ -32,7 +31,6 @@ export interface SantizedEatOpts {
 }
   
 const DefaultOpts: IEatUtilOpts = {
-  eatUntilFull: true,
   eatingTimeout: 3000,
   minHealth: 14,
   minHunger: 15,
@@ -72,7 +70,9 @@ export class EatUtil extends EventEmitter {
 
   public cancelEat() {
     if (this._rejectionBinding == null) return;
+    console.log("ey")
     this._rejectionBinding(new Error('Eating manually canceled!'))
+    this.bot.deactivateItem();
   }
 
 
@@ -151,7 +151,6 @@ export class EatUtil extends EventEmitter {
         if (packet.entityId === this.bot.entity.id && packet.entityStatus === 9) {
           this.bot._client.off('entity_status', eatingListener);
           this.bot.inventory.off('updateSlot', itemListener);
-          delete this._rejectionBinding;
           res();
         }
       };
@@ -161,17 +160,19 @@ export class EatUtil extends EventEmitter {
           if (newItem?.type !== relevantItem.type) {
             this.bot._client.off('entity_status', eatingListener);
             this.bot.inventory.off('updateSlot', itemListener);
-            delete this._rejectionBinding;
             rej(new Error(`Item switched early to: ${newItem?.name}!\nItem: ${newItem}`))
           }
       }
       this.bot._client.on('entity_status', eatingListener);
       this.bot.inventory.on('updateSlot', itemListener);
 
-      this._rejectionBinding = rej;
+      this._rejectionBinding = (error) => {
+        this.bot._client.off('entity_status', eatingListener);
+        this.bot.inventory.off('updateSlot', itemListener);
+        rej(error)
+      };
 
       setTimeout(() => {
-        delete this._rejectionBinding;
         rej(new Error(`Eating timed out with a time of ${timeout} milliseconds!`))
       }, timeout)
     })
@@ -230,6 +231,7 @@ export class EatUtil extends EventEmitter {
     finally {
       if (opts.equipOldItem && switchedItems && currentItem) 
         this.bot.util.inv.customEquip(currentItem, wantedHand) 
+      delete this._rejectionBinding;
       this._eating = false;
       this.emit('autoEatFinish', opts);
 
@@ -248,7 +250,6 @@ export class EatUtil extends EventEmitter {
 
   enableAuto() {
     this.eatTimer = setInterval(this.statusCheck, 50);
-    this.bot.on('physicsTick', this.statusCheck);
   }
 
   disableAuto() {

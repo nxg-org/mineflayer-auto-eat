@@ -63,3 +63,20 @@ bot.on("autoEatStarted", (item, offhand) => {
 bot.on("autoEatFinished", (item, offhand) => {
     console.log(`Auto Eat finished! Finished eating ${item?.displayName}. Used ${offhand ? "off-hand" : "hand"}`);
 });
+
+
+bot.on('chat', (username, message) => {
+    if (username === bot.username) return;
+
+    const [cmd, ...args] = message.trim().split(' ')
+
+    switch (cmd) {
+        case "cancel":
+            bot.autoEat.cancelEat();
+            break;
+        case "switchhands":
+            bot.autoEat.setOpts({offhand: !bot.autoEat.opts.offhand})
+            break;
+
+    }
+})
