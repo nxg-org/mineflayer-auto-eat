@@ -46,6 +46,7 @@ const DefaultOpts: IEatUtilOpts = {
 export class EatUtil extends EventEmitter {
   opts: IEatUtilOpts;
   private _eating = false;
+  private _rejectionBinding?: (error: Error) => void;
 
   public get foods() {
     return this.bot.registry.foods;
@@ -66,6 +67,11 @@ export class EatUtil extends EventEmitter {
 
   public setOpts(opts: Partial<IEatUtilOpts>) {
     Object.assign(this.opts, opts)
+  }
+
+  public cancelEat() {
+    if (this._rejectionBinding == null) return;
+    this._rejectionBinding(new Error('Eating manually canceled!'))
   }
 
 
@@ -144,6 +150,7 @@ export class EatUtil extends EventEmitter {
         if (packet.entityId === this.bot.entity.id && packet.entityStatus === 9) {
           this.bot._client.off('entity_status', eatingListener);
           this.bot.inventory.off('updateSlot', itemListener);
+          delete this._rejectionBinding;
           res();
         }
       };
@@ -153,13 +160,17 @@ export class EatUtil extends EventEmitter {
           if (newItem?.type !== relevantItem.type) {
             this.bot._client.off('entity_status', eatingListener);
             this.bot.inventory.off('updateSlot', itemListener);
+            delete this._rejectionBinding;
             rej(new Error(`Item switched early to: ${newItem?.name}!\nItem: ${newItem}`))
           }
       }
       this.bot._client.on('entity_status', eatingListener);
       this.bot.inventory.on('updateSlot', itemListener);
 
+      this._rejectionBinding = rej;
+
       setTimeout(() => {
+        delete this._rejectionBinding;
         rej(new Error(`Eating timed out with a time of ${timeout} milliseconds!`))
       }, timeout)
     })
