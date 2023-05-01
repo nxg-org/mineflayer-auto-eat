@@ -52,8 +52,7 @@ export class EatUtil extends (EventEmitter as {new(): StrictEventEmitter<EventEm
   public opts: IEatUtilOpts;
   private _eating = false;
   private _rejectionBinding?: (error: Error) => void;
-  private eatTimer?: NodeJS.Timer;
-
+  
   public get foods() {
     return this.bot.registry.foods;
   }
