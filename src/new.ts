@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import { Bot } from "mineflayer";
 import { Food as MdFood } from "minecraft-data";
 import { Item } from "prismarine-item";
+import { StrictEventEmitter } from "strict-event-emitter-types";
 
 type FoodSelection = MdFood | Item | number | string
 type FoodPriority = "foodPoints" | "saturation" | "effectiveQuality" | "saturationRatio"
@@ -24,7 +25,7 @@ export interface EatOpts {
   priority?: FoodPriority;
 }
 
-export interface SantizedEatOpts {
+export interface SanitizedEatOpts {
     food: Item;
     offhand: boolean;
     equipOldItem: boolean;
@@ -41,8 +42,14 @@ const DefaultOpts: IEatUtilOpts = {
   strictErrors: true
 };
 
-export class EatUtil extends EventEmitter {
-  opts: IEatUtilOpts;
+export interface EatUtilEvents {
+  eatStart: (opts: SanitizedEatOpts) => void;
+  eatFail: (error: Error) => void;
+  eatFinish: (opts: SanitizedEatOpts) => void;
+}
+
+export class EatUtil extends (EventEmitter as {new(): StrictEventEmitter<EventEmitter, EatUtilEvents>}) {
+  public opts: IEatUtilOpts;
   private _eating = false;
   private _rejectionBinding?: (error: Error) => void;
   private eatTimer?: NodeJS.Timer;
@@ -70,7 +77,6 @@ export class EatUtil extends EventEmitter {
 
   public cancelEat() {
     if (this._rejectionBinding == null) return;
-    console.log("ey")
     this._rejectionBinding(new Error('Eating manually canceled!'))
     this.bot.deactivateItem();
   }
@@ -122,7 +128,7 @@ export class EatUtil extends EventEmitter {
    * @param opts 
    * @returns {boolean} whether opts is correctly sanitized.
    */
-  private sanitizeOpts(opts: EatOpts): opts is SantizedEatOpts { 
+  private sanitizeOpts(opts: EatOpts): opts is SanitizedEatOpts { 
     opts.equipOldItem = opts.equipOldItem === undefined ? this.opts.returnToLastItem : opts.equipOldItem;
     opts.offhand = opts.offhand === undefined ? this.opts.offhand : opts.offhand;
     opts.priority = opts.priority === undefined ? this.opts.priority : opts.priority;
@@ -217,7 +223,7 @@ export class EatUtil extends EventEmitter {
     // trigger use state based on hand
     this.bot.activateItem(opts.offhand)
 
-    this.emit('autoEatStart', opts);
+    this.emit('eatStart', opts);
 
     // Wait for eating to finish, handle errors gracefully if there are, and perform cleanup.
     try { 
@@ -226,14 +232,14 @@ export class EatUtil extends EventEmitter {
     catch (e) {
       if (this.opts.strictErrors) throw e; // expose e to outer environment
       else console.error(e);
-      this.emit('autoEatFail', e);
+      this.emit('eatFail', e as Error);
     } 
     finally {
       if (opts.equipOldItem && switchedItems && currentItem) 
         this.bot.util.inv.customEquip(currentItem, wantedHand) 
       delete this._rejectionBinding;
       this._eating = false;
-      this.emit('autoEatFinish', opts);
+      this.emit('eatFinish', opts);
 
     }
   }

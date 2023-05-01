@@ -22,7 +22,8 @@
         "ts:start": "ts-node example/example.ts"
     },
     "dependencies": {
-        "@nxg-org/mineflayer-util-plugin": "^1.8.0"
+        "@nxg-org/mineflayer-util-plugin": "^1.8.0",
+        "strict-event-emitter-types": "^2.0.0"
     },
     "devDependencies": {
         "mineflayer": "^4.8.0",
