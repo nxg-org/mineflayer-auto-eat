@@ -51,6 +51,7 @@ export interface EatUtilEvents {
 export class EatUtil extends (EventEmitter as {new(): StrictEventEmitter<EventEmitter, EatUtilEvents>}) {
   public opts: IEatUtilOpts;
   private _eating = false;
+  private _enabled = false;
   private _rejectionBinding?: (error: Error) => void;
   
   public get foods() {
@@ -63,6 +64,14 @@ export class EatUtil extends (EventEmitter as {new(): StrictEventEmitter<EventEm
 
   public get foodsByName() {
     return this.bot.registry.foodsByName;
+  }
+
+  public get isEating() {
+    return this._eating;
+  }
+
+  public get enabled() {
+    return this._enabled;
   }
 
   constructor(private readonly bot: Bot, opts: Partial<IEatUtilOpts> = {}) {
@@ -262,10 +271,14 @@ export class EatUtil extends (EventEmitter as {new(): StrictEventEmitter<EventEm
    * Note: did not change anything.
    */
   enableAuto() {
+    if (this._enabled) return;
+    this._enabled = true;
     this.bot.on('physicsTick', this.statusCheck);
   }
 
   disableAuto() {
+    if (!this._enabled) return;
+    this._enabled = false;
     this.bot.off('physicsTick', this.statusCheck);
   }
 }
